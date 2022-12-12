@@ -34,4 +34,5 @@ const nav = () => {
   nav.appendChild("ul");
 
   document.querySelector("#root").appendChild("nav");
+  document.querySelector("#root").appendChild(".news-list-container");
 };
