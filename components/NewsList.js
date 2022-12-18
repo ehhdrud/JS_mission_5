@@ -1,38 +1,115 @@
 // do something!
-const nav = () => {
-  let ids = [
-    "all",
-    "business",
-    "entertainment",
-    "health",
-    "science",
-    "sports",
-    "technology",
-  ];
 
-  let txts = [
-    "전체보기",
-    "비즈니스",
-    "엔터테인먼트",
-    "건강",
-    "과학",
-    "스포츠",
-    "기술",
-  ];
+import { store } from "./store.js";
+import { observe } from "./observer.js";
 
-  let ul = document.createElement("ul");
-  for (let i = 0; i < ids.length; i++) {
-    let li = document.createElement("li");
-    li.id = ids[i];
-    li.classList.add("category-item");
-    li.innerText = txt[i];
-    ul.appendChild(li);
+function NewsList() {
+  let container = document.createElement("div");
+  container.classList.add("news-list-container");
+  document.querySelector("#root").appendChild(container);
+
+  let article = document.createElement("article");
+  article.classList.add("news-list");
+  container.appendChild(article);
+
+  let scrollObserver = document.createElement("div");
+  scrollObserver.classList.add("scroll-observer");
+  container.appendChild(scrollObserver);
+
+  const spinner = function spinnerGenerator() {
+    const img = document.createElement("img");
+    img.src = "img/ball-triangle.svg";
+    img.alt = "Loading...";
+    return img;
+  };
+
+  const showPost = (posts) => {
+    posts.forEach((post) => {
+      const newsItem = document.createElement("section");
+      newsItem.classList.add("news-item");
+    });
+  };
+}
+
+/*
+  const showPost = (posts) => {
+    posts.forEach((post) => {
+      const newsItem = document.createElement("section");
+      newsItem.classList.add("news-item");
+      newsItem.innerHTML = `
+            <div class="thumbnail">
+              <a href=${post.url} target="_blank" rel="noopener noreferrer">
+                <img
+                  src=${post.urlToImage}
+                  alt="thumbnail" />
+              </a>
+            </div>
+            <div class="contents">
+              <h2>
+                <a href=${post.url} target="_blank" rel="noopener noreferrer">
+                  ${post.title}
+                </a>
+              </h2>
+              <p>
+                ${post.description}
+              </p>
+            </div>
+            `;
+      article.appendChild(newsItem);
+    });
+  };
+
+  let page = 0;
+  let category = "all";
+  const pageSize = 5;
+  const apiKey = "3ba9cf6e16b349dd9ba846e5e05e0ac6";
+  let url;
+
+  observe(async () => {
+    category = store.state.category;
+    page = 0;
+    reset();
+  });
+
+  function reset() {
+    const $reset = document.querySelector(".news-list");
+    $reset.innerHTML = "";
   }
 
-  let nav = document.querySelector("nav");
-  nav.classList.add = "catagory-list";
-  nav.appendChild("ul");
+  //intersaction 설정
+  // option 설정
+  const option = {
+    root: null, //viewport
+    rootMargin: "0px",
+    threshold: 0.8, // 80%가 viewport에 들어와야 callback함수 실행
+  };
 
-  document.querySelector("#root").appendChild("nav");
-  document.querySelector("#root").appendChild(".news-list-container");
-};
+  // callback 함수 정의
+  const callback = (entries, observer) => {
+    entries.forEach(async (entry) => {
+      if (entry.isIntersecting) {
+        page++;
+        console.log(page);
+        url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
+          category === "all" ? "" : category
+        }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
+        try {
+          const response = await axios.get(url);
+          await showPost(response.data.articles);
+          scrollObs.appendChild(spin);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  };
+
+  // IntersectionsObserver 생성
+  const observer = new IntersectionObserver(callback, option);
+
+  // target 관찰
+  observer.observe(scrollObs);
+}
+
+export default NewsList;
+*/
