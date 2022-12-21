@@ -64,20 +64,17 @@ function NewsList() {
   observe(async () => {
     category = store.state.category;
     page = 0;
+
     reset();
   });
-
-  const option = {
-    root: null,
-    rootMargin: "0px",
-    tresshold: 0.8,
-  };
 
   const callback = (entries, io) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         page++;
-        url = ``;
+        url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
+          category === "all" ? "" : category
+        }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
         try {
           const response = await axios.get(url);
           await showPost(response.data.articles);
@@ -88,39 +85,15 @@ function NewsList() {
       }
     });
   };
-}
 
-const io = new IntersectionObserver(callback, option);
-
-io.observe(scrollObserver);
-
-/*
-  // callback 함수 정의
-  const callback = (entries, observer) => {
-    entries.forEach(async (entry) => {
-      if (entry.isIntersecting) {
-        page++;
-        console.log(page);
-        url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
-          category === "all" ? "" : category
-        }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
-        try {
-          const response = await axios.get(url);
-          await showPost(response.data.articles);
-          scrollObs.appendChild(spin);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    });
+  const option = {
+    root: null,
+    rootMargin: "0px",
+    tresshold: 0.5,
   };
 
-  // IntersectionsObserver 생성
-  const observer = new IntersectionObserver(callback, option);
+  const io = new IntersectionObserver(callback, option);
 
-  // target 관찰
-  observer.observe(scrollObs);
+  io.observe(scrollObserver);
 }
-
 export default NewsList;
-*/
