@@ -25,45 +25,41 @@ function NewsList() {
 
   const showPost = (posts) => {
     posts.forEach((post) => {
-      const newsItem = document.createElement("section");
-      newsItem.classList.add("news-item");
-    });
-  };
-}
-
-/*
-  const showPost = (posts) => {
-    posts.forEach((post) => {
-      const newsItem = document.createElement("section");
-      newsItem.classList.add("news-item");
-      newsItem.innerHTML = `
-            <div class="thumbnail">
-              <a href=${post.url} target="_blank" rel="noopener noreferrer">
-                <img
-                  src=${post.urlToImage}
-                  alt="thumbnail" />
-              </a>
-            </div>
-            <div class="contents">
-              <h2>
-                <a href=${post.url} target="_blank" rel="noopener noreferrer">
-                  ${post.title}
-                </a>
-              </h2>
-              <p>
-                ${post.description}
-              </p>
-            </div>
-            `;
-      article.appendChild(newsItem);
+      const section = document.createElement("section");
+      section.classList.add("news-item");
+      section.innerHTML = `
+      <div class="thumbnail">
+      <a href=${post.url} target="_blank" rel="noopener noreferrer">
+        <img
+          src=${post.urlToImage}
+          alt="thumbnail" />
+      </a>
+    </div>
+    <div class="contents">
+      <h2>
+        <a href=${post.url} target="_blank" rel="noopener noreferrer">
+          ${post.title}
+        </a>
+      </h2>
+      <p>
+        ${post.description}
+      </p>
+    </div>
+    `;
+      article.appendChild(section);
     });
   };
 
   let page = 0;
   let category = "all";
   const pageSize = 5;
-  const apiKey = "3ba9cf6e16b349dd9ba846e5e05e0ac6";
+  const apiKey = "30c0709466ed425a9882e34b927fe375";
   let url;
+
+  function reset() {
+    const resetElement = document.querySelector(".news-list");
+    resetElement.innerHTML = "";
+  }
 
   observe(async () => {
     category = store.state.category;
@@ -71,19 +67,34 @@ function NewsList() {
     reset();
   });
 
-  function reset() {
-    const $reset = document.querySelector(".news-list");
-    $reset.innerHTML = "";
-  }
-
-  //intersaction 설정
-  // option 설정
   const option = {
-    root: null, //viewport
+    root: null,
     rootMargin: "0px",
-    threshold: 0.8, // 80%가 viewport에 들어와야 callback함수 실행
+    tresshold: 0.8,
   };
 
+  const callback = (entries, io) => {
+    entries.forEach(async (entry) => {
+      if (entry.isIntersecting) {
+        page++;
+        url = ``;
+        try {
+          const response = await axios.get(url);
+          await showPost(response.data.articles);
+          scrollObserver.appendChild(spinner);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  };
+}
+
+const io = new IntersectionObserver(callback, option);
+
+io.observe(scrollObserver);
+
+/*
   // callback 함수 정의
   const callback = (entries, observer) => {
     entries.forEach(async (entry) => {
