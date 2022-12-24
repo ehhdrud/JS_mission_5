@@ -64,7 +64,6 @@ function NewsList() {
   observe(async () => {
     category = store.state.category;
     page = 0;
-
     reset();
   });
 
@@ -72,9 +71,11 @@ function NewsList() {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         page++;
-        url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
-          category === "all" ? "" : category
-        }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
+        url = `https://newsapi.org/v2/top-headlines?country=kr
+        &category=${category === "all" ? "" : category}
+        &page=${page}
+        &pageSize=${pageSize}
+        &apiKey=${apiKey}`;
         try {
           const response = await axios.get(url);
           await showPost(response.data.articles);

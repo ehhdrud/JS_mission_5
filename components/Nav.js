@@ -28,13 +28,13 @@ const nav = () => {
     li.innerText = txts[i];
     ul.appendChild(li);
   }
+  let categoryItem = document.querySelectorAll(".category-item");
+  categoryItem[0].classList.add("active");
 
   let nav = document.querySelector("nav");
   nav.classList.add = "catagory-list";
   nav.appendChild("ul");
 
-  let categoryItem = document.querySelectorAll(".category-item");
-  categoryItem[0].classList.add("active");
   for (let i = 0; i < categoryItem.length; i++) {
     categoryItem[i].addEventListener("click", (event) => {
       categoryItem[i].classList.add("active");
@@ -42,8 +42,8 @@ const nav = () => {
         if (categoryItem[j] != event.target)
           categoryItem[j].classList.remove("active");
       }
-      // const categoryId = event.target.id;
-      // store.setState({ category: categoryId });
+      const categoryId = event.target.id;
+      store.setState({ category: categoryId });
     });
   }
 
