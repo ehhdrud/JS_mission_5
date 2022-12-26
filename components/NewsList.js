@@ -4,25 +4,24 @@ import { store } from "./store.js";
 import { observe } from "./observer.js";
 
 function NewsList() {
-  let container = document.createElement("div");
-  container.classList.add("news-list-container");
-  document.querySelector("#root").appendChild(container);
+  //사용할 변수 선언부
+  let page = 0;
+  let category = "all";
+  const pageSize = 5;
+  const apiKey = "30c0709466ed425a9882e34b927fe375";
+  let url;
 
+  //newsListContainer 생성
+  let newsListContainer = document.createElement("div");
+  newsListContainer.classList.add("news-list-container");
+  document.querySelector("#root").appendChild(newsListContainer);
+
+  //article 생성
   let article = document.createElement("article");
   article.classList.add("news-list");
-  container.appendChild(article);
+  newsListContainer.appendChild(article);
 
-  let scrollObserver = document.createElement("div");
-  scrollObserver.classList.add("scroll-observer");
-  container.appendChild(scrollObserver);
-
-  const spinner = function spinnerGenerator() {
-    const img = document.createElement("img");
-    img.src = "img/ball-triangle.svg";
-    img.alt = "Loading...";
-    return img;
-  };
-
+  //article 하위 요소들을 생성하는 함수 'showPost' 정의
   const showPost = (posts) => {
     posts.forEach((post) => {
       const section = document.createElement("section");
@@ -50,23 +49,23 @@ function NewsList() {
     });
   };
 
-  let page = 0;
-  let category = "all";
-  const pageSize = 5;
-  const apiKey = "30c0709466ed425a9882e34b927fe375";
-  let url;
+  //scrollOberserver 생성
+  let scrollObserver = document.createElement("div");
+  scrollObserver.classList.add("scroll-observer");
+  newsListContainer.appendChild(scrollObserver);
 
-  function reset() {
-    const resetElement = document.querySelector(".news-list");
-    resetElement.innerHTML = "";
-  }
+  const spinner = function spinnerGenerator() {
+    const img = document.createElement("img");
+    img.src = "img/ball-triangle.svg";
+    img.alt = "Loading...";
+    return img;
+  };
 
-  observe(async () => {
-    category = store.state.category;
-    page = 0;
-    reset();
-  });
+  //scrollOberver가 뷰포트와 교파되면 5개의 새로운 뉴스를 'showPost'하도록 구현
+  //관찰자 객체 생성
+  const io = new IntersectionObserver(callback, option);
 
+  //callback 정의
   const callback = (entries, io) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
@@ -87,14 +86,24 @@ function NewsList() {
     });
   };
 
+  //option 정의
   const option = {
-    root: null,
-    rootMargin: "0px",
     tresshold: 0.5,
   };
 
-  const io = new IntersectionObserver(callback, option);
-
+  //관찰자 객체를 통해 scrollObserver를 감시
   io.observe(scrollObserver);
+
+  //news-list를 리셋하는 함수를 정의하고, observe❓❓❓❓❓
+  function reset() {
+    const resetElement = document.querySelector(".news-list");
+    resetElement.innerHTML = "";
+  }
+
+  observe(async () => {
+    category = store.state.category;
+    page = 0;
+    reset();
+  });
 }
 export default NewsList;
