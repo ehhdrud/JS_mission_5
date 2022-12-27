@@ -5,7 +5,7 @@ import { store } from "./store.js";
 import { observe } from "./observer.js";
 */
 
-const nav = () => {
+const Nav = () => {
   let ids = [
     "all",
     "business",
@@ -34,12 +34,13 @@ const nav = () => {
     li.innerText = txts[i];
     ul.appendChild(li);
   }
+
   let categoryItem = document.querySelectorAll(".category-item");
   categoryItem[0].classList.add("active");
 
-  let nav = document.querySelector("nav");
-  nav.classList.add = "catagory-list";
-  nav.appendChild("ul");
+  let nav = document.createElement("nav");
+  nav.classList.add("catagory-list");
+  nav.appendChild(ul);
 
   for (let i = 0; i < categoryItem.length; i++) {
     categoryItem[i].addEventListener("click", (event) => {
@@ -55,5 +56,7 @@ const nav = () => {
     });
   }
 
-  document.querySelector("#root").appendChild("nav");
+  document.querySelector("#root").appendChild(nav);
 };
+
+export default Nav;
