@@ -1,4 +1,10 @@
 // do something!
+
+/*
+import { store } from "./store.js";
+import { observe } from "./observer.js";
+*/
+
 const nav = () => {
   let ids = [
     "all",
@@ -42,8 +48,10 @@ const nav = () => {
         if (categoryItem[j] != event.target)
           categoryItem[j].classList.remove("active");
       }
+      /*
       const categoryId = event.target.id;
       store.setState({ category: categoryId });
+      */
     });
   }
 

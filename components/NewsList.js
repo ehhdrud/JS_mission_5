@@ -1,12 +1,14 @@
 // do something!
 
+/*
 import { store } from "./store.js";
 import { observe } from "./observer.js";
+*/
 
 function NewsList() {
-  //사용할 변수 선언부
-  let page = 0;
+  //선언부
   let category = "all";
+  let page = 0;
   const pageSize = 5;
   const apiKey = "30c0709466ed425a9882e34b927fe375";
   let url;
@@ -61,7 +63,7 @@ function NewsList() {
     return img;
   };
 
-  //scrollOberver가 뷰포트와 교파되면 5개의 새로운 뉴스를 'showPost'하도록 구현
+  //scrollOberver가 뷰포트와 교차되면 5개의 새로운 뉴스를 'showPost'하도록 구현
   //관찰자 객체 생성
   const io = new IntersectionObserver(callback, option);
 
@@ -94,7 +96,8 @@ function NewsList() {
   //관찰자 객체를 통해 scrollObserver를 감시
   io.observe(scrollObserver);
 
-  //news-list를 리셋하는 함수를 정의하고, observe❓❓❓❓❓
+  /*
+  //news-list를 리셋하는 함수를 정의하고, observe.js에 정의한 observe함수를 통해 reset.
   function reset() {
     const resetElement = document.querySelector(".news-list");
     resetElement.innerHTML = "";
@@ -105,5 +108,6 @@ function NewsList() {
     page = 0;
     reset();
   });
+  */
 }
 export default NewsList;
