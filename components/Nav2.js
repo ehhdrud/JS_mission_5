@@ -1,9 +1,6 @@
 // do something!
-
-/*
-import { store } from "./store.js";
 import { observe } from "./observer.js";
-*/
+import { store } from "./index.js";
 
 const Nav = () => {
   let ids = [
@@ -16,7 +13,7 @@ const Nav = () => {
     "technology",
   ];
 
-  let txts = [
+  let txt = [
     "전체보기",
     "비즈니스",
     "엔터테인먼트",
@@ -31,29 +28,28 @@ const Nav = () => {
     let li = document.createElement("li");
     li.id = ids[i];
     li.classList.add("category-item");
-    li.innerText = txts[i];
+    li.innerText = txt[i];
     ul.appendChild(li);
   }
 
   let nav = document.createElement("nav");
   nav.classList.add("category-list");
-  nav.appendChild(ul);
   document.querySelector("#root").appendChild(nav);
+  nav.appendChild(ul);
 
   let categoryItem = document.querySelectorAll(".category-item");
   categoryItem[0].classList.add("active");
-
   for (let i = 0; i < categoryItem.length; i++) {
-    categoryItem[i].addEventListener("click", (event) => {
+    categoryItem[i].addEventListener("click", function (e) {
       categoryItem[i].classList.add("active");
       for (let j = 0; j < categoryItem.length; j++) {
-        if (categoryItem[j] != event.target)
+        if (categoryItem[j] != e.target) {
           categoryItem[j].classList.remove("active");
+        }
       }
-      /*
-      const categoryId = event.target.id;
+      const categoryId = e.target.id;
       store.setState({ category: categoryId });
-      */
+      console.log(store.state.category);
     });
   }
 };
