@@ -1,11 +1,8 @@
 // do something!
+// import { store } from "./store.js";
+// import { observe } from "./observer.js";
 
-/*
-import { store } from "./store.js";
-import { observe } from "./observer.js";
-*/
-
-function NewsList() {
+const NewsList = () => {
   //선언부
   let category = "all";
   let page = 0;
@@ -56,18 +53,18 @@ function NewsList() {
   scrollObserver.classList.add("scroll-observer");
   newsListContainer.appendChild(scrollObserver);
 
-  const spinner = function spinnerGenerator() {
-    const img = document.createElement("img");
-    img.src = "img/ball-triangle.svg";
-    img.alt = "Loading...";
-    return img;
-  };
+  const spinner = document.createElement("img");
+  spinner.src = "img/ball-triangle.svg";
+  spinner.alt = "Loading...";
 
   //scrollOberver가 뷰포트와 교차되면 5개의 새로운 뉴스를 'showPost'하도록 구현
   //관찰자 객체 생성
   const io = new IntersectionObserver(callback, option);
 
   //callback 정의
+  //관찰하고 있는 모든 대상을 forEach문으로 순회하면서 if문을 실행
+  //if문에는 관찰 대상이 뷰포트와 교차되면 새로운 뉴스를 출력(try-catch문을 사용하여 오류 출력)
+  //새로운 뉴스를 출력할때 await❓❓❓❓❓axios❓❓❓❓❓
   const callback = (entries, io) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
@@ -90,12 +87,11 @@ function NewsList() {
 
   //option 정의
   const option = {
-    tresshold: 0.5,
+    tresshold: 0.75,
   };
 
   //관찰자 객체를 통해 scrollObserver를 감시
   io.observe(scrollObserver);
-
   /*
   //news-list를 리셋하는 함수를 정의하고, observe.js에 정의한 observe함수를 통해 reset.
   function reset() {
@@ -109,5 +105,5 @@ function NewsList() {
     reset();
   });
   */
-}
+};
 export default NewsList;
