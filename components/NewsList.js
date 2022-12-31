@@ -1,9 +1,8 @@
 // do something!
-// import { store } from "./store.js";
+// import { store } from "./index.js";
 // import { observe } from "./observer.js";
 
 const NewsList = () => {
-  //선언부
   let category = "all";
   let page = 0;
   const pageSize = 5;
@@ -20,35 +19,45 @@ const NewsList = () => {
   article.classList.add("news-list");
   newsListContainer.appendChild(article);
 
-  //article 하위 요소들을 생성하는 함수 'showPost' 정의
   const showPost = (posts) => {
     posts.forEach((post) => {
       const section = document.createElement("section");
       section.classList.add("news-item");
       section.innerHTML = `
-      <div class="thumbnail">
-      <a href=${post.url} target="_blank" rel="noopener noreferrer">
-        <img
-          src=${post.urlToImage}
-          alt="thumbnail" />
-      </a>
-    </div>
-    <div class="contents">
-      <h2>
-        <a href=${post.url} target="_blank" rel="noopener noreferrer">
-          ${post.title}
-        </a>
-      </h2>
-      <p>
-        ${post.description}
-      </p>
-    </div>
-    `;
+            <div class="thumbnail">
+              <a href=${post.url} target="_blank" rel="noopener noreferrer">
+                <img
+                  src=${post.urlToImage}
+                  alt="thumbnail" />
+              </a>
+            </div>
+            <div class="contents">
+              <h2>
+                <a href=${post.url} target="_blank" rel="noopener noreferrer">
+                  ${post.title}
+                </a>
+              </h2>
+              <p>
+                ${post.description}
+              </p>
+            </div>
+            `;
       article.appendChild(section);
     });
   };
 
-  //scrollOberserver 생성
+  // observe(async () => {
+  //   category = store.state.category;
+  //   page = 0;
+  //   reset();
+  // });
+
+  // function reset() {
+  //   const $reset = document.querySelector(".news-list");
+  //   $reset.innerHTML = "";
+  // }
+
+  //scrollObserver 생성
   let scrollObserver = document.createElement("div");
   scrollObserver.classList.add("scroll-observer");
   newsListContainer.appendChild(scrollObserver);
@@ -57,53 +66,36 @@ const NewsList = () => {
   spinner.src = "img/ball-triangle.svg";
   spinner.alt = "Loading...";
 
-  //scrollOberver가 뷰포트와 교차되면 5개의 새로운 뉴스를 'showPost'하도록 구현
-  //관찰자 객체 생성
-  const io = new IntersectionObserver(callback, option);
-
-  //callback 정의
-  //관찰하고 있는 모든 대상을 forEach문으로 순회하면서 if문을 실행
-  //if문에는 관찰 대상이 뷰포트와 교차되면 새로운 뉴스를 출력(try-catch문을 사용하여 오류 출력)
-  //새로운 뉴스를 출력할때 await❓❓❓❓❓axios❓❓❓❓❓
+  // callback 함수 정의
   const callback = (entries, io) => {
     entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         page++;
-        url = `https://newsapi.org/v2/top-headlines?country=kr
-        &category=${category === "all" ? "" : category}
-        &page=${page}
-        &pageSize=${pageSize}
-        &apiKey=${apiKey}`;
+        console.log(page);
+        url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
+          category === "all" ? "" : category
+        }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
         try {
           const response = await axios.get(url);
           await showPost(response.data.articles);
           scrollObserver.appendChild(spinner);
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          console.log(error);
         }
       }
     });
   };
 
-  //option 정의
+  // option 설정
   const option = {
-    tresshold: 0.75,
+    threshold: 0.8,
   };
 
-  //관찰자 객체를 통해 scrollObserver를 감시
-  io.observe(scrollObserver);
-  /*
-  //news-list를 리셋하는 함수를 정의하고, observe.js에 정의한 observe함수를 통해 reset.
-  function reset() {
-    const resetElement = document.querySelector(".news-list");
-    resetElement.innerHTML = "";
-  }
+  // IntersectionsObserver 생성
+  const io = new IntersectionObserver(callback, option);
 
-  observe(async () => {
-    category = store.state.category;
-    page = 0;
-    reset();
-  });
-  */
+  // target 관찰
+  io.observe(scrollObserver);
 };
+
 export default NewsList;
