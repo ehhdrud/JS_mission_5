@@ -1,7 +1,3 @@
-// do something!
-// import { store } from "./index.js";
-// import { observe } from "./observer.js";
-
 const NewsList = () => {
   let category = "all";
   let page = 0;
@@ -45,17 +41,6 @@ const NewsList = () => {
       article.appendChild(section);
     });
   };
-
-  // observe(async () => {
-  //   category = store.state.category;
-  //   page = 0;
-  //   reset();
-  // });
-
-  // function reset() {
-  //   const $reset = document.querySelector(".news-list");
-  //   $reset.innerHTML = "";
-  // }
 
   //scrollObserver 생성
   let scrollObserver = document.createElement("div");
