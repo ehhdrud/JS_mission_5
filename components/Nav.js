@@ -1,52 +1,32 @@
-// do something!
+const Nav = (data) => {
+  const categoryListNav = document.createElement("nav");
+  categoryListNav.className = "category-list";
 
-const Nav = () => {
-  let ids = [
-    "all",
-    "business",
-    "entertainment",
-    "health",
-    "science",
-    "sports",
-    "technology",
-  ];
+  categoryListNav.insertAdjacentHTML(
+    "beforeend",
+    `
+      <ul>
+         <li id="all" class="category-item active">전체보기</li>
+         <li id="business" class="category-item">비즈니스</li>
+         <li id="entertainment" class="category-item">엔터테인먼트</li>
+         <li id="health" class="category-item">건강</li>
+         <li id="science" class="category-item">과학</li>
+         <li id="sports" class="category-item">스포츠</li>
+         <li id="technology" class="category-item">기술</li>
+      </ul>  
+   `
+  );
 
-  let txts = [
-    "전체보기",
-    "비즈니스",
-    "엔터테인먼트",
-    "건강",
-    "과학",
-    "스포츠",
-    "기술",
-  ];
-
-  let ul = document.createElement("ul");
-  for (let i = 0; i < ids.length; i++) {
-    let li = document.createElement("li");
-    li.id = ids[i];
-    li.classList.add("category-item");
-    li.innerText = txts[i];
-    ul.appendChild(li);
-  }
-
-  let nav = document.createElement("nav");
-  nav.classList.add("category-list");
-  nav.appendChild(ul);
-  document.querySelector("#root").appendChild(nav);
-
-  let categoryItem = document.querySelectorAll(".category-item");
-  categoryItem[0].classList.add("active");
-
-  for (let i = 0; i < categoryItem.length; i++) {
-    categoryItem[i].addEventListener("click", (event) => {
-      categoryItem[i].classList.add("active");
-      for (let j = 0; j < categoryItem.length; j++) {
-        if (categoryItem[j] != event.target)
-          categoryItem[j].classList.remove("active");
-      }
+  const categoryItemLi = categoryListNav.querySelectorAll(".category-item");
+  categoryItemLi.forEach((element) => {
+    element.addEventListener("click", (event) => {
+      categoryItemLi.forEach((element) => {
+        element.classList.remove("active");
+      });
+      event.target.classList.add("active");
+      data.category = event.target.id;
     });
-  }
+  });
 };
 
 export default Nav;
