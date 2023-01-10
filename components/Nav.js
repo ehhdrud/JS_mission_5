@@ -27,6 +27,8 @@ const Nav = (data) => {
       data.category = event.target.id;
     });
   });
+
+  return categoryListNav;
 };
 
 export default Nav;
