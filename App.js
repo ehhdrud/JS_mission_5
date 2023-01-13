@@ -1,6 +1,6 @@
-// do something!
 import { Nav, NewsList } from "./components/index.js";
 
+//window.onload 함수를 이용해서 페이지가 로드되면 자동 실행되는 함수를 정의한다. 페이지의 모든 요소가 로드되어야만 호출된다.
 window.onload = async function () {
   const rootElement = document.getElementById("root");
 

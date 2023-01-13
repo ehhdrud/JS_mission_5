@@ -1,10 +1,10 @@
-//NewList함수를 async를 걸어 비동기적으로 실행한다
+//NewList함수를 async를 걸어 비동기적으로 실행한다.
 const NewsList = async (data) => {
-  //<div class="news-list-container">를 생성하고 newsListContainerDiv 변수에 넣어준다
+  //<div class="news-list-container">를 생성하고 newsListContainerDiv 변수에 넣어준다.
   const newsListContainerDiv = document.createElement("div");
   newsListContainerDiv.className = "news-list-container";
 
-  //<article class="news-list">를 생성하여 newsListArticle 변수에 넣어주고, Nav.js에서 정의한 'data.category'를 data-category라는 속성을 만들어 넣어주고, 위 문단에서 정의한 newsListContainerDiv에 붙여준다
+  //<article class="news-list">를 생성하여 newsListArticle 변수에 넣어주고, Nav.js에서 정의한 'data.category'를 data-category라는 속성을 만들어 넣어주고, 위 문단에서 정의한 newsListContainerDiv에 붙여준다.
   const newsListArticle = document.createElement("article");
   newsListArticle.className = "news-list";
   newsListArticle.dataset.category = data.category;
@@ -36,7 +36,8 @@ const getNewsList = async (page, category) => {
   //생성한 5개의 새로운 뉴스들을 담을 객체와 pageSize, apiKey, url을 초기화
   const newsListArr = [];
   const pageSize = 5;
-  const apiKey = "30c0709466ed425a9882e34b927fe375";
+  const apiKey = "d07c46a4af5548649977196532728ed8";
+  // const apiKey = "30c0709466ed425a9882e34b927fe375";
   const url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
     category === "all" ? "" : category
   }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
