@@ -10,15 +10,6 @@ const NewsList = async (data) => {
   newsListArticle.dataset.category = data.category;
   newsListContainerDiv.appendChild(newsListArticle);
 
-  //getNewsList 함수를 await를 걸어 실행하여 'Promise 혹은 어떤값'을 기다려서 반환받아 newsList 변수에 넣어준다.
-  //❗근데 왜 파라미터 하나만 넣어줬지?
-  //(getNewsList 함수: <section class="news-item">를 5개씩 가져오는 함수)
-  //반환받은 값이 들어있는 newsList 변수의 요소들을 순회하며 위 문단에서 정의한 newsListArticle 변수에 넣어준다.
-  const newsList = await getNewsList(data);
-  newsList.forEach((item) => {
-    newsListArticle.appendChild(item);
-  });
-
   //getScrollObserver 함수를 실행하여 반환값을 scrollObserver 변수에 넣어주고, 맨 위에서 정의한 newsListContainerDiv에 넣어준다.
   //(getScrollObserver 함수: <div class="scroll-Observer">를 가져오는 함수)
   const scrollObserver = getScrollObserver();
@@ -36,8 +27,8 @@ const getNewsList = async (page, category) => {
   //생성한 5개의 새로운 뉴스들을 담을 객체와 pageSize, apiKey, url을 초기화
   const newsListArr = [];
   const pageSize = 5;
-  const apiKey = "d07c46a4af5548649977196532728ed8";
-  // const apiKey = "30c0709466ed425a9882e34b927fe375";
+  // const apiKey = "d07c46a4af5548649977196532728ed8";
+  const apiKey = "30c0709466ed425a9882e34b927fe375";
   const url = `https://newsapi.org/v2/top-headlines?country=kr&category=${
     category === "all" ? "" : category
   }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
@@ -46,12 +37,12 @@ const getNewsList = async (page, category) => {
   //try: 실행할 구문
   //catch: 에러 발생 시 실행할 구문
   try {
-    //axios.get(url)를 통해 newsAPI로부터 기사 정보를 가져와 response 변수에 넣어주고, 해당 데이터의 data.articles 정보를 article 변수에 할당한다.
+    //axios.get(url)를 통해 newsAPI로부터 기사 정보를 가져와 response 변수에 넣어주고, 해당 데이터의 data.articles이라는 정보를 article 변수에 할당한다.
     const response = await axios.get(url);
-    const article = response.data.articles;
+    const articles = response.data.articles;
 
     //article 변수의 요소들를 순회하며 newsItemSection 변수에 <section class="news-item"> 태그와 그 하위요소를 만들고 기사 정보를 담고 있는 article 변수의 데이터들을 넣어준다.
-    article.forEach((data) => {
+    articles.forEach((data) => {
       const newsItemSection = document.createElement("section");
       newsItemSection.className = "news-item";
       newsItemSection.insertAdjacentHTML(
@@ -115,24 +106,13 @@ const intersectionObserverFunc = (newsListArticle, scrollObserver) => {
         const nextPage = parseInt(entry.target.dataset.page);
         const category = newsListArticle.dataset.category;
 
-        //❗getNewsList함수를 실행시켜서 newsList 변수에 넣어주고
+        //getNewsList함수를 실행시켜서 newsList 변수에 넣어주고
         //페이지를 로드했으니 scrollObserver의 dataset.page를 1 증가시킨다.
         const newsList = await getNewsList(nextPage, category);
         newsList.forEach((data) => {
           newsListArticle.appendChild(data);
         });
         entry.target.dataset.page = nextPage + 1;
-
-        //❗newsList 랭스가 0을 초과한다면 newsList 변수의 요소들을 순회하며 newsListArticle 변수에 넣어주고 for문으로 다시 돌아간다.
-        if (newsList.length > 0) {
-          newsList.forEach((data) => {
-            newsListArticle.appendChild(data);
-          });
-          continue;
-        }
-        //❗관찰이 끝난 scroll-Observer를 더이상 관찰하지 않고 제거한다.
-        observer.unobserve(entry.target);
-        entry.target.remove();
       }
     }
   };

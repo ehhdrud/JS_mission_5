@@ -1,3 +1,4 @@
+//proxyData를 매개변수로 받아온다.
 const Nav = (data) => {
   const categoryListNav = document.createElement("nav");
   categoryListNav.className = "category-list";
@@ -24,6 +25,7 @@ const Nav = (data) => {
         element.classList.remove("active");
       });
       event.target.classList.add("active");
+      //App.js -> 프록시 -> handler 객체 -> set 메서드 👉 해당 할당 동작 시 trap.
       data.category = event.target.id;
     });
   });
