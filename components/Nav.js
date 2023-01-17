@@ -1,8 +1,10 @@
-//proxyData를 매개변수로 받아온다.
+//data에는 App.js의 proxyData가 들어간다.
 const Nav = (data) => {
+  //<nav class="category-list">를 생성한다.
   const categoryListNav = document.createElement("nav");
   categoryListNav.className = "category-list";
 
+  //<nav class="category-list">의 하위 태그를 생성한다.
   categoryListNav.insertAdjacentHTML(
     "beforeend",
     `
@@ -18,6 +20,7 @@ const Nav = (data) => {
    `
   );
 
+  //<li>에 click 이벤트가 발생하면 active라는 클래스를 추가해주고 해당 li의 id값을 data.category에 할당한다.
   const categoryItemLi = categoryListNav.querySelectorAll(".category-item");
   categoryItemLi.forEach((element) => {
     element.addEventListener("click", (event) => {
