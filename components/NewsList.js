@@ -1,26 +1,28 @@
-//NewList() 함수는 비동기적으로 동작하는 함수로, data에는 App.js의 proxyData가 들어간다.
+// 비동기적으로 동작하는 함수 NewList 정의 (App.js에 따라 data에는 proxyData가 할당)
 const NewsList = async (data) => {
-  //<div class="news-list-container">를 생성한다.
+  // <div class="news-list-container"> 생성
   const newsListContainerDiv = document.createElement("div");
   newsListContainerDiv.className = "news-list-container";
 
-  //<article class="news-list">를 생성, 전역으로 관리되는 'data.category'를 data-category 사용자 정의 속성에 넣어준다.
+  // <article class="news-list"> 생성
   const newsListArticle = document.createElement("article");
   newsListArticle.className = "news-list";
+  // 전역으로 관리되는 data.category를 data-category라는 사용자 정의 속성에 할당하고 <article class="news-list">의 자식 요소로 할당
   newsListArticle.dataset.category = data.category;
   newsListContainerDiv.appendChild(newsListArticle);
 
-  //getScrollObserver() 함수를 통해 <div class="scroll-Observer">를 가져온다.
+  // getScrollObserver() 함수의 결과물인 <div class="scroll-Observer">8를 <div class="news-list-container">의 자식 요소로 할당
   const scrollObserver = getScrollObserver();
   newsListContainerDiv.appendChild(scrollObserver);
 
-  //intersectionObserverFunc() 함수를 실행하여 intersection Observer API를 사용하여 관찰 대상의 변화를 관찰하여 그에 따른 작업을 진행시킨다.
+  // intersection Observer API를 이용해 관찰 대상의 변화를 관찰 후 그에 따르는 작업을 처리
   intersectionObserverFunc(newsListArticle, scrollObserver);
 
+  // 완성된 <div class="news-list-container"> 반환
   return newsListContainerDiv;
 };
 
-//getNewsList() 함수는 axios를 이용해 뉴스 정보를(section 태그 및 그 아래 요소)들을 불러온다.
+// axios를 이용한 뉴스 정보 획득
 const getNewsList = async (page, category) => {
   const newsListArr = [];
   const pageSize = 5;
@@ -29,7 +31,7 @@ const getNewsList = async (page, category) => {
     category === "all" ? "" : category
   }&page=${page}&pageSize=${pageSize}&apiKey=${apiKey}`;
 
-  //try-catch를 통한 예외처리
+  // try-catch를 통한 예외처리
   try {
     const response = await axios.get(url);
     const articles = response.data.articles;
@@ -108,4 +110,5 @@ const intersectionObserverFunc = (newsListArticle, scrollObserver) => {
   observer.observe(scrollObserver);
 };
 
+// 모듈 내보내기
 export default NewsList;

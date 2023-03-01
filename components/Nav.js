@@ -1,13 +1,11 @@
-//data에는 App.js의 proxyData가 들어간다.
+// Nav 함수 정의 (App.js에 따라 data에는 proxyData가 할당)
 const Nav = (data) => {
-  //<nav class="category-list">를 생성한다.
+  // <nav class="category-list"> 생성
   const categoryListNav = document.createElement("nav");
   categoryListNav.className = "category-list";
 
-  //<nav class="category-list">의 하위 태그를 생성한다.
-  categoryListNav.insertAdjacentHTML(
-    "beforeend",
-    `
+  // <nav class="category-list">의 하위 태그 생성
+  categoryListNav.innerHTML = `
       <ul>
          <li id="all" class="category-item active">전체보기</li>
          <li id="business" class="category-item">비즈니스</li>
@@ -17,10 +15,9 @@ const Nav = (data) => {
          <li id="sports" class="category-item">스포츠</li>
          <li id="technology" class="category-item">기술</li>
       </ul>  
-   `
-  );
+   `;
 
-  //<li>에 click 이벤트가 발생하면 active라는 클래스를 추가해주고 해당 li의 id값을 data.category에 할당한다.
+  // 특정 <li> 요소에 click 이벤트가 발생하면 active라는 클래스를 추가해주고 id값을 data.category에 할당
   const categoryItemLi = categoryListNav.querySelectorAll(".category-item");
   categoryItemLi.forEach((element) => {
     element.addEventListener("click", (event) => {
@@ -33,7 +30,9 @@ const Nav = (data) => {
     });
   });
 
+  // 완성된 <nav class="category-list"> 반환
   return categoryListNav;
 };
 
+// 모듈 내보내기
 export default Nav;
