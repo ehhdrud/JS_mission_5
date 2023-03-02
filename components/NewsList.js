@@ -1,4 +1,4 @@
-// 비동기적으로 동작하는 함수 NewList 정의 (App.js에 따라 data에는 proxyData가 할당)
+// 비동기적으로 뉴스리스트를 생성하는 함수 NewList 정의 (App.js에 따라 data에는 proxyData가 할당)
 const NewsList = async (data) => {
   // <div class="news-list-container"> 생성
   const newsListContainerDiv = document.createElement("div");
@@ -22,7 +22,7 @@ const NewsList = async (data) => {
   return newsListContainerDiv;
 };
 
-// axios를 이용한 뉴스 정보 획득
+// 비동기적으로 뉴스 정보를 획득하는 함수 getNewsList 정의
 const getNewsList = async (page, category) => {
   const newsListArr = [];
   const pageSize = 5;
@@ -33,9 +33,12 @@ const getNewsList = async (page, category) => {
 
   // try-catch를 통한 예외처리
   try {
+    // axios.get을 통해 데이터를 요청, 데이터를 response 변수에 할당
     const response = await axios.get(url);
+    // 데이터의 data.articles 프로퍼티를 articles 변수에 할당
     const articles = response.data.articles;
 
+    // articles 변수의 요소들을 순회하며 <section class = "news-item"> 생성
     articles.forEach((data) => {
       const newsItemSection = document.createElement("section");
       newsItemSection.className = "news-item";
@@ -63,50 +66,60 @@ const getNewsList = async (page, category) => {
                 </div>
             `
       );
+      // 완성된 <section class = "news-item">를 newsListArr 배열에 할당
       newsListArr.push(newsItemSection);
     });
+    // 완성된 newsListArr 배열을 반환
     return newsListArr;
   } catch (error) {
     console.log(error);
   }
 };
 
-//getScrollObserver() 함수는 <div class="scroll-observer">를 생성하고 속성값과 하위 요소들을 정의한다.
-//해당 함수의 리턴값은 윗단에서 실행되어 scrollObserver 변수로 들어간다.
+// getScrollObserver() 함수 정의
 const getScrollObserver = () => {
+  // <div class="scroll-observer"> 생성
   const scrollObserverDiv = document.createElement("div");
   scrollObserverDiv.className = "scroll-observer";
+  // data-page라는 속성을 추가하여 "1" 할당
   scrollObserverDiv.dataset.page = "1";
+  // <img src = "~" alt = "~"> 생성
   const img = document.createElement("img");
   img.src = "./img/ball-triangle.svg";
   img.alt = "Loading...";
+  // <img src = "~" alt = "~">를 <div class="scroll-observer">의 자식 요소로 할당
   scrollObserverDiv.appendChild(img);
+  // 완성된 <div class="scroll-observer"> 반환
   return scrollObserverDiv;
 };
 
-//intersectionObserverFunc 함수에서 콜백함수를 정의하고 scrollObserver을 관찰하여 관찰 대상의 상태에 따라 콜백함수를 실행한다.
+// intersectionObserverFunc() 함수 정의
+
 const intersectionObserverFunc = (newsListArticle, scrollObserver) => {
-  //IntersectionObserver의 콜백함수는 async를 통해 비동기적으로 동작한다.
+  // 비동기로 동작하는 callback 정의
   const callback = async (entries) => {
     for (const entry of entries) {
-      //scrollObserver가 뷰포트와 교차된다면
+      // scrollObserver가 뷰포트와 교차된다면
       if (entry.isIntersecting) {
-        //scrollObserver의 dataset.page를 nextPage 변수에 넣어주고
-        //newsListArticle의 dataset.category를 category 변수에 넣어주고
-        //getNewsList() 함수를 실행시켜서 불러온 뉴스 정보들을 newsList 변수에 넣어주고 forEach문을 통해 appendChild!
-        //페이지를 로드했으니 scrollObserver의 dataset.page를 1 증가시킨다.
+        // scrollObserverDiv.dataset.page를 nextPage 변수에 할당
         const nextPage = parseInt(entry.target.dataset.page);
+        // newsListArticle.dataset.category를 category 변수에 할당
         const category = newsListArticle.dataset.category;
+        // getNewsList() 함수를 통해 완성된 newsListArr 배열을 newsList 변수에 할당
         const newsList = await getNewsList(nextPage, category);
+        // forEach문을 통해 배열의 각 요소를 newsListArticle의 자식 요소로 할당
         newsList.forEach((data) => {
           newsListArticle.appendChild(data);
         });
+        // 페이지를 로드했으니 scrollObserverDiv.dataset.page를 1 증가
         entry.target.dataset.page = nextPage + 1;
       }
     }
   };
-  //관찰!
+
+  // 관찰 대상이 100% 보여야 callback 함수가 실행되는 관찰자 객체를 생성해 observer 변수에 할당
   const observer = new IntersectionObserver(callback, { threshold: 1.0 });
+  // scrollObserver 변수를 관찰
   observer.observe(scrollObserver);
 };
 
